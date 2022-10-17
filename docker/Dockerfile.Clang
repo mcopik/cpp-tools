@@ -1,0 +1,22 @@
+FROM ubuntu:22.04
+MAINTAINER Marcin Copik <mcopik@gmail.com>
+ARG LLVM_VERSION
+ENV LLVM_VERSION=${LLVM_VERSION}
+
+RUN apt-get update\
+  && apt-get install -y --no-install-recommends ca-certificates wget gnupg
+
+RUN echo "deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy-15 main" > /etc/apt/sources.list.d/llvm.list\
+  && wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key|apt-key add -\
+  && apt-get update\
+  && apt-get install -y --no-install-recommends clang-15 clang-format-15 clang-tidy-15
+
+RUN update-alternatives --install /usr/local/bin/clang-format python /usr/bin/clang-format-15 40
+
+#RUN deps='ca-certificates lsb-release software-properties-common wget gnupg'\
+#  && apt-get update\
+  #&& apt-get install -y ${deps} --no-install-recommends\
+  #&& wget https://apt.llvm.org/llvm.sh\
+  #&& chmod +x llvm.sh\
+  #&& ./llvm.sh ${LLVM_VERSION}
+
